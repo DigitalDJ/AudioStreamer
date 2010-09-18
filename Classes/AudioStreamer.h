@@ -182,6 +182,7 @@ extern NSString * const ASUpdateMetadataNotification;
 @property AudioStreamerErrorCode errorCode;
 @property (readonly) AudioStreamerState state;
 @property (readonly) double progress;
+@property (readonly) double bufferFillPercentage;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
