@@ -39,6 +39,7 @@
 	 selector:@selector(presentAlertWithTitle:)
 	 name:ASPresentAlertWithTitleNotification
 	 object:nil];
+    [[NSThread currentThread] setName:@"Main Thread"];
 }
 
 
@@ -50,12 +51,15 @@
 
 - (void)presentAlertWithTitle:(NSNotification *)notification
 {
+    NSString *title = [[notification userInfo] objectForKey:@"title"];
+    NSString *message = [[notification userInfo] objectForKey:@"message"];
+
+    //NSLog(@"Current Thread = %@", [NSThread currentThread]);
     dispatch_queue_t main_queue = dispatch_get_main_queue();
 
     dispatch_async(main_queue, ^{
 
-        NSString *title = [[notification userInfo] objectForKey:@"title"];
-        NSString *message = [[notification userInfo] objectForKey:@"message"];
+        //NSLog(@"Current Thread (in main queue) = %@", [NSThread currentThread]);
         if (!uiIsVisible) {
     #ifdef TARGET_OS_IPHONE
             if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iPhoneOS_4_0) {
@@ -77,11 +81,14 @@
                                    cancelButtonTitle:NSLocalizedString(@"OK", @"")
                                    otherButtonTitles: nil]
                                   autorelease];
+            /*
             [alert
              performSelector:@selector(show)
              onThread:[NSThread mainThread]
              withObject:nil
              waitUntilDone:NO];
+             */
+            [alert show];
     #else
             NSAlert *alert =
             [NSAlert
@@ -90,11 +97,14 @@
              alternateButton:nil
              otherButton:nil
              informativeTextWithFormat:message];
+            /*
             [alert
              performSelector:@selector(runModal)
              onThread:[NSThread mainThread]
              withObject:nil
              waitUntilDone:NO];
+            */
+            [alert runModal];
     #endif
         }
     });
