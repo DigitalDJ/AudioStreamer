@@ -25,6 +25,7 @@
 	IBOutlet UISlider *progressSlider;
 	IBOutlet UITextField *metadataArtist;
 	IBOutlet UITextField *metadataTitle;
+	IBOutlet UITextField *metadataAlbum;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
 	NSTimer *levelMeterUpdateTimer;

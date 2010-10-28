@@ -265,6 +265,17 @@ void ASReadStreamCallBack
 }
 
 //
+// bufferFillPercentage
+//
+// returns a value between 0 and 1 that represents how full the buffer is
+//
+-(double)bufferFillPercentage
+{
+	return (double)buffersUsed/(double)(kNumAQBufs - 1);
+}
+
+
+//
 // isFinishing
 //
 // returns YES if the audio has reached a stopping condition.

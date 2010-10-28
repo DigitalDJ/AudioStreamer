@@ -1,10 +1,26 @@
 A fork of DigitalDJ's AudioStreamer (which is a fork jfricker's AudioStreamer (which is a fork of the original AudioStreamer by mattgallagher))
 
 
-- Fix alert spam / Invisible alerts by dispatching alerts on the main (GUI) thread instead of the notification thread
-- Fix compilation issues in Mac OS X Sample App
-- Fix compilation issue when SHOUTCAST_METADAT flag is defined
-- Fix iPhone apps crashes in SHOUTCAST_METADATA mode when returning from Background
+Forked and cherry-picked to get a number of community addons and fixes:
+- Shoutcast metadata [jfricker]
+- MIME type detection [andybee]
+- HE-AACv2 [idevsoftware]
+- Level Metering [idevsoftware]
+- NSThread memory leak [mattgallagher]
+- Fix alert spam / Invisible alerts by dispatching alerts on the main (GUI) thread instead of the notification thread [sebsto]
+- Fix compilation issues in Mac OS X Sample App [sebsto]
+- Fix compilation issue when SHOUTCAST_METADAT flag is defined [sebsto]
+- Fix iPhone apps crashes in SHOUTCAST_METADATA mode when returning from Background [sebsto]
+
+Fixes and features I've implemented:
+- Fixed interruption crashes
+- Background buffering
+- Play/pause from iPod controls
+- Stop all UI updating and timers while backgrounded
+- Retina display example
+- Support for Pause button in UI
+- Local Notifications (outside app) on error
+
 
 
 
