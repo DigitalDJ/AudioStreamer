@@ -2,3 +2,6 @@ build
 .DS_Store
 *.xcodeproj/*.mode*
 *.xcodeproj/*.pbxuser
+*.xcodeproj/*.xcworkspace
+*.xcodeproj/xcuserdata
+*.xcodeproj/*.pbxproj
