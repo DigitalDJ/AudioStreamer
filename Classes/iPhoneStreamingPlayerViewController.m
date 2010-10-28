@@ -360,6 +360,7 @@
 {
 	NSString *streamArtist;
 	NSString *streamTitle;
+	NSString *streamAlbum;
     //NSLog(@"Raw meta data = %@", [[aNotification userInfo] objectForKey:@"metadata"]);
           
 	NSArray *metaParts = [[[aNotification userInfo] objectForKey:@"metadata"] componentsSeparatedByString:@";"];
@@ -385,16 +386,23 @@
 	// this looks odd but not every server will have all artist hyphen title
 	if ([streamParts count] >= 2) {
 		streamTitle = [streamParts objectAtIndex:1];
+		if ([streamParts count] >= 3) {
+			streamAlbum = [streamParts objectAtIndex:2];
+		} else {
+			streamAlbum = @"N/A";
+		}
 	} else {
 		streamTitle = @"";
+		streamAlbum = @"";
 	}
-	NSLog(@"%@ by %@", streamTitle, streamArtist);
+	NSLog(@"%@ by %@ from %@", streamTitle, streamArtist, streamAlbum);
 
 	// only update the UI if in foreground
 	iPhoneStreamingPlayerAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
 	if (appDelegate.uiIsVisible) {
 		metadataArtist.text = streamArtist;
 		metadataTitle.text = streamTitle;
+		metadataAlbum.text = streamAlbum;
 	}
 	self.currentArtist = streamArtist;
 	self.currentTitle = streamTitle;
