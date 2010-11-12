@@ -14,6 +14,10 @@
 
 #import <dispatch/dispatch.h>
 
+#ifndef kCFCoreFoundationVersionNumber_iPhoneOS_4_0
+#define kCFCoreFoundationVersionNumber_iPhoneOS_4_0 550.32
+#endif
+
 #import "iPhoneStreamingPlayerAppDelegate.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "AudioStreamer.h"
