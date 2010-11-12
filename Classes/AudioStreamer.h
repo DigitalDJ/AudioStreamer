@@ -12,11 +12,7 @@
 //  appreciated but not required.
 //
 
-#ifdef TARGET_OS_IPHONE			
-#import <UIKit/UIKit.h>
-#else
-#import <Cocoa/Cocoa.h>
-#endif TARGET_OS_IPHONE			
+#import <Foundation/Foundation.h>
 
 #include <pthread.h>
 #include <AudioToolbox/AudioToolbox.h>
@@ -155,6 +151,7 @@ extern NSString * const ASStatusChangedNotification;
 								// time)
 	double packetDuration;		// sample rate times frames per packet
 	double lastProgress;		// last calculated progress point
+	BOOL vbr; // indicates VBR (or not) stream
 }
 
 @property AudioStreamerErrorCode errorCode;
@@ -163,6 +160,7 @@ extern NSString * const ASStatusChangedNotification;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
+@property (readonly) BOOL vbr;
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
@@ -176,7 +174,6 @@ extern NSString * const ASStatusChangedNotification;
 - (double)calculatedBitRate;
 
 @end
-
 
 
 
