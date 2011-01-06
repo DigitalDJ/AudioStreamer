@@ -226,6 +226,7 @@ void ASReadStreamCallBack
 
 @synthesize errorCode;
 @synthesize state;
+@synthesize stopReason;
 @synthesize bitRate;
 @synthesize httpHeaders;
 @synthesize numberOfChannels;
@@ -1237,8 +1238,12 @@ cleanup:
 		else if (state == AS_PAUSED)
 		{
 			err = AudioQueueStart(audioQueue, NULL);
-#if TARGET_OS_IPHONE            
-			bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+#if TARGET_OS_IPHONE
+			if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+				if (bgTaskId != UIBackgroundTaskInvalid) {
+					bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+				}
+			}
 #endif            
 			if (err)
 			{
@@ -1834,7 +1839,9 @@ cleanup:
 				{
 					err = AudioQueueStart(audioQueue, NULL);
 #if TARGET_OS_IPHONE                    
-					bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+					if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+						bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+					}
 #endif					
 					if (err)
 					{
@@ -1848,8 +1855,10 @@ cleanup:
 					self.state = AS_WAITING_FOR_QUEUE_TO_START;
 
 					err = AudioQueueStart(audioQueue, NULL);
-#if TARGET_OS_IPHONE                    
-					bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+#if TARGET_OS_IPHONE 
+					if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+						bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
+					}
 #endif					
 					if (err)
 					{
@@ -2337,9 +2346,6 @@ cleanup:
 	propertyID:(AudioQueuePropertyID)inID
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-#if TARGET_OS_IPHONE    
-	UIBackgroundTaskIdentifier newTaskId = UIBackgroundTaskInvalid;
-#endif	
 	@synchronized(self)
 	{
 		if (inID == kAudioQueueProperty_IsRunning)
@@ -2364,21 +2370,20 @@ cleanup:
 				// By creating an NSRunLoop for the AudioQueue thread, it changes the
 				// thread destruction order and seems to avoid this crash bug -- or
 				// at least I haven't had it since (nasty hard to reproduce error!)
-				//
-#if TARGET_OS_IPHONE                
-				newTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
-#endif                
+				//              
 				
 				[NSRunLoop currentRunLoop];
 
 				self.state = AS_PLAYING;
 
 #if TARGET_OS_IPHONE				
-				if (bgTaskId != UIBackgroundTaskInvalid) {
-					[[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
+				if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
+					if (bgTaskId != UIBackgroundTaskInvalid) {
+						[[UIApplication sharedApplication] endBackgroundTask: bgTaskId];
+					}
+					
+					bgTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:NULL];
 				}
-				
-				bgTaskId = newTaskId;
 #endif                
 			}
 			else
